@@ -2,8 +2,11 @@ package util
 
 import (
 	"github.com/oklog/ulid"
+	"strings"
 	"time"
 )
+
+var base32chars = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
 
 type Field int
 
@@ -55,9 +58,27 @@ func (u ULID) ToString(f Field, e Enc) string {
 	return ""
 }
 
-func UlidTimes(id ulid.ULID) (string, string) {
+func UlidTimes(id ulid.ULID) (string, string, uint64) {
 	ms := id.Time()
 	local := time.UnixMilli(int64(ms)).Local().Format(time.RFC3339)
 	utc := time.UnixMilli(int64(ms)).UTC().Format(time.RFC3339)
-	return local, utc
+	return utc, local, ms
+}
+
+func ParseUlidString(id string) (ulid.ULID, bool, string) {
+	val, err := ulid.ParseStrict(strings.TrimSpace(id))
+	var reason string
+	if err != nil {
+		switch err {
+		case ulid.ErrDataSize:
+			reason = "Too short" // input is limited to 26 chars
+		case ulid.ErrInvalidCharacters:
+			reason = "Invalid characters"
+		case ulid.ErrBigTime:
+			reason = "Too far in the future"
+		default:
+			reason = "Invalid ULID"
+		}
+	}
+	return val, err == nil, reason
 }

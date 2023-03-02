@@ -6,6 +6,7 @@ import (
 	"github.com/aldernero/ulid-tui/pkg/util"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/oklog/ulid"
 	"os"
 	"strings"
@@ -13,22 +14,24 @@ import (
 )
 
 type Model struct {
-	data    ulid.ULID
-	enc     util.Enc
-	isValid bool
-	input   textinput.Model
+	data          ulid.ULID
+	enc           util.Enc
+	isValid       bool
+	invalidReason string
+	input         textinput.Model
 }
 
 func initialModel(text string) Model {
 	var data ulid.ULID
 	var valid bool
+	var reason string
 	text = strings.TrimSpace(text)
 	if text == "" {
 		data = ulid.MustNew(ulid.Timestamp(time.Now()), rand.Reader)
 		text = data.String()
 		valid = true
 	} else {
-		data, valid = util.ParseUlidString(text)
+		data, valid, reason = util.ParseUlidString(text)
 	}
 	ti := textinput.New()
 	ti.Focus()
@@ -36,10 +39,12 @@ func initialModel(text string) Model {
 	ti.Width = 26
 	ti.Placeholder = "Enter ULID"
 	ti.SetValue(text)
+	//ti.TextStyle = lipgloss.NewStyle().Foreground(crtLightGray)
 	return Model{
-		data:    data,
-		isValid: valid,
-		input:   ti,
+		data:          data,
+		isValid:       valid,
+		invalidReason: reason,
+		input:         ti,
 	}
 }
 
@@ -72,22 +77,45 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		}
 	}
-	m.data, m.isValid = util.ParseUlidString(m.input.Value())
+	m.data, m.isValid, m.invalidReason = util.ParseUlidString(m.input.Value())
 
 	m.input, cmd = m.input.Update(msg)
 	return m, cmd
 }
 
 func (m Model) View() string {
-	var output string
+	var status string
 	var table string
-	var local, utc string
 	if !m.isValid {
-		output = "Invalid ULID"
-		table = emptyTable()
+		status = invalidStyle(m.invalidReason)
+		table = emptyEncodingTable()
 	} else {
-		local, utc = util.UlidTimes(m.data)
-		table = createTable(m.data, m.enc)
+		status = validStyle("Valid ULID")
+		table = createEncodingTable(m.data, m.enc)
 	}
-	return fmt.Sprintf("%s\n%s\n%s\n%s\n%s", m.input.View(), output, utc, local, table)
+	return lipgloss.JoinVertical(lipgloss.Top,
+		tuiStyle(lipgloss.JoinHorizontal(lipgloss.Center, m.input.View(), status)),
+		tuiStyle(lipgloss.JoinHorizontal(lipgloss.Center, createUlidStringBreakdown(m.input.Value()), m.viewBaseSelector())),
+		createTimeTable(m.data),
+		table,
+		helpMessage())
+}
+
+func (m Model) viewBaseSelector() string {
+	var bin, hex, dec string
+	switch m.enc {
+	case util.Bin:
+		bin = baseSelectedStyle("BIN")
+		hex = baseUnselectedStyle("HEX")
+		dec = baseUnselectedStyle("DEC")
+	case util.Hex:
+		bin = baseUnselectedStyle("BIN")
+		hex = baseSelectedStyle("HEX")
+		dec = baseUnselectedStyle("DEC")
+	case util.Dec:
+		bin = baseUnselectedStyle("BIN")
+		hex = baseUnselectedStyle("HEX")
+		dec = baseSelectedStyle("DEC")
+	}
+	return baseSelectorStyle(lipgloss.JoinVertical(lipgloss.Top, bin, hex, dec))
 }

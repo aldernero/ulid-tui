@@ -4,7 +4,6 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
-	"github.com/oklog/ulid"
 	"strings"
 )
 
@@ -15,11 +14,6 @@ const (
 	Hex
 	Dec
 )
-
-func ParseUlidString(id string) (ulid.ULID, bool) {
-	val, err := ulid.ParseStrict(strings.TrimSpace(id))
-	return val, err == nil
-}
 
 func BytesToString(b []byte, enc Enc) string {
 	var output string
@@ -48,24 +42,16 @@ func BytesToString(b []byte, enc Enc) string {
 	return output
 }
 
-func PadWithChar(msg, left, right, pad string, width int) string {
-	minWidth := len(msg) + len(left) + len(right) + 2
+func PadWithString(msg, pad string, width int) string {
+	minWidth := len(msg) + 2
 	if minWidth > width {
 		return ""
 	}
-	padCount := (width - minWidth) / 2
+	padCountLeft := (width - minWidth) / 2
+	padCountRight := width - minWidth - padCountLeft
 	var output string
-	if left != "" {
-		output += left
-	}
-	output += strings.Repeat(pad, padCount)
+	output += strings.Repeat(pad, padCountLeft)
 	output += " " + msg + " "
-	if len(msg)%2 != 0 {
-		padCount++
-	}
-	output += strings.Repeat(pad, padCount)
-	if right != "" {
-		output += right
-	}
+	output += strings.Repeat(pad, padCountRight)
 	return output
 }
