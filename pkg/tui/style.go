@@ -17,17 +17,16 @@ const (
 	timeWidth           = 10
 	entropyWidth        = 16
 	helpColor           = lipgloss.Color("#888888")
-	borderColor         = lipgloss.Color("#de3e93")
+	borderColor         = lipgloss.Color("#00ff00")
 	placeholderColor    = lipgloss.Color("#888888")
-	baseSelectedColor   = lipgloss.Color("#47a4ac")
-	baseUnselectedColor = lipgloss.Color("#baebda")
+	baseSelectedColor   = lipgloss.Color("#0000e8")
+	baseUnselectedColor = lipgloss.Color("#ffffff")
 	invalidColor        = lipgloss.Color("#ff0000")
-	validColor          = lipgloss.Color("#08e225")
-	timeColor           = lipgloss.Color("#ffdf80")
-	entropyColor        = lipgloss.Color("#80a0ff")
-	headerColor         = lipgloss.Color("#3ede89")
-	footerColor         = lipgloss.Color("#3ede89")
-	crtLightGray        = lipgloss.Color("#c9c9c9")
+	validColor          = lipgloss.Color("#00ff00")
+	timeColor           = lipgloss.Color("#00e8e8")
+	entropyColor        = lipgloss.Color("#e800e8")
+	headerColor         = lipgloss.Color("#e8e800")
+	footerColor         = lipgloss.Color("#e8e800")
 )
 
 var headerBorder = lipgloss.Border{
