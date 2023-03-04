@@ -295,7 +295,6 @@ var timeUTCDescStyle = lipgloss.NewStyle().
 	Padding(0).
 	Margin(0).
 	BorderForeground(borderColor).
-	//Foreground(crtLightGray).
 	Border(timeUTCDescBorder, true, true, false, true).
 	Render
 
@@ -305,7 +304,6 @@ var timeLocalDescStyle = lipgloss.NewStyle().
 	Padding(0).
 	Margin(0).
 	BorderForeground(borderColor).
-	//Foreground(crtLightGray).
 	Border(timeLocalDescBorder, true, true, false, true).
 	Render
 
@@ -315,7 +313,6 @@ var timeUTCValStyle = lipgloss.NewStyle().
 	Padding(0).
 	Margin(0).
 	BorderForeground(borderColor).
-	//Foreground(crtLightGray).
 	Border(timeUTCValBorder, true, true, false, false).
 	Render
 
@@ -325,7 +322,6 @@ var timeLocalValStyle = lipgloss.NewStyle().
 	Padding(0).
 	Margin(0).
 	BorderForeground(borderColor).
-	//Foreground(crtLightGray).
 	Border(timeLocalValBorder, true, true, false, false).
 	Render
 
@@ -335,7 +331,6 @@ var timeEpochDescStyle = lipgloss.NewStyle().
 	Padding(0).
 	Margin(0).
 	BorderForeground(borderColor).
-	//Foreground(crtLightGray).
 	Border(timeEpochDescBorder, true, true, true, true).
 	Render
 
@@ -345,6 +340,5 @@ var timeEpochValStyle = lipgloss.NewStyle().
 	Padding(0).
 	Margin(0).
 	BorderForeground(borderColor).
-	//Foreground(crtLightGray).
 	Border(timeEpochValBorder, true, true, true, false).
 	Render

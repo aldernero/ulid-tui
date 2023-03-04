@@ -6,8 +6,6 @@ import (
 	"time"
 )
 
-var base32chars = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
-
 type Field int
 
 const (

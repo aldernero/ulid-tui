@@ -39,7 +39,6 @@ func initialModel(text string) Model {
 	ti.Width = 26
 	ti.Placeholder = "Enter ULID"
 	ti.SetValue(text)
-	//ti.TextStyle = lipgloss.NewStyle().Foreground(crtLightGray)
 	return Model{
 		data:          data,
 		isValid:       valid,
