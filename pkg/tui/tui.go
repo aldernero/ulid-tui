@@ -10,7 +10,6 @@ import (
 	"github.com/oklog/ulid"
 	"os"
 	"strings"
-	"time"
 )
 
 type Model struct {
@@ -27,7 +26,7 @@ func initialModel(text string) Model {
 	var reason string
 	text = strings.TrimSpace(text)
 	if text == "" {
-		data = ulid.MustNew(ulid.Timestamp(time.Now()), rand.Reader)
+		data = ulid.MustNew(ulid.Now(), rand.Reader)
 		text = data.String()
 		valid = true
 	} else {
