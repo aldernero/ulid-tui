@@ -3,3 +3,13 @@ Not terribly useful, but what it lacks in utility it makes up for in spunk! This
 
 
 ![image](https://user-images.githubusercontent.com/96601789/222458004-32b86693-3bbf-4856-bce1-00c0a43ca50b.png)
+
+# Installation
+
+Install using `go install`
+
+```bash
+go install github.com/aldernero/ulid-tui@latest
+```
+
+or clone and build.
