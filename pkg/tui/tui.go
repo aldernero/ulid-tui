@@ -3,13 +3,15 @@ package tui
 import (
 	"crypto/rand"
 	"fmt"
-	"github.com/aldernero/ulid-tui/pkg/util"
-	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
-	"github.com/oklog/ulid"
 	"os"
 	"strings"
+
+	"github.com/aldernero/ulid-tui/pkg/util"
+	"github.com/oklog/ulid/v2"
+
+	"charm.land/bubbles/v2/textinput"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 )
 
 type Model struct {
@@ -35,7 +37,7 @@ func initialModel(text string) Model {
 	ti := textinput.New()
 	ti.Focus()
 	ti.CharLimit = 26
-	ti.Width = 26
+	ti.SetWidth(26)
 	ti.Placeholder = "Enter ULID"
 	ti.SetValue(text)
 	return Model{
@@ -48,7 +50,7 @@ func initialModel(text string) Model {
 
 func StartTea(text string) {
 	m := initialModel(text)
-	p := tea.NewProgram(m, tea.WithAltScreen())
+	p := tea.NewProgram(m)
 	if _, err := p.Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
@@ -62,12 +64,11 @@ func (m Model) Init() tea.Cmd {
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 
-	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		switch msg.Type {
-		case tea.KeyEnter, tea.KeyCtrlC, tea.KeyEsc:
+	if msg, ok := msg.(tea.KeyPressMsg); ok {
+		switch msg.String() {
+		case "enter", "ctrl+c", "esc":
 			return m, tea.Quit
-		case tea.KeyTab:
+		case "tab":
 			if m.enc == util.Dec {
 				m.enc = util.Bin
 			} else {
@@ -81,7 +82,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m Model) View() string {
+func (m Model) View() tea.View {
 	var status string
 	var table string
 	if !m.isValid {
@@ -91,12 +92,15 @@ func (m Model) View() string {
 		status = validStyle("Valid ULID")
 		table = createEncodingTable(m.data, m.enc)
 	}
-	return lipgloss.JoinVertical(lipgloss.Top,
+	content := lipgloss.JoinVertical(lipgloss.Top,
 		tuiStyle(lipgloss.JoinHorizontal(lipgloss.Center, m.input.View(), status)),
 		tuiStyle(lipgloss.JoinHorizontal(lipgloss.Center, createUlidStringBreakdown(m.input.Value()), m.viewBaseSelector())),
 		createTimeTable(m.data),
 		table,
 		helpMessage())
+	v := tea.NewView(content)
+	v.AltScreen = true
+	return v
 }
 
 func (m Model) viewBaseSelector() string {

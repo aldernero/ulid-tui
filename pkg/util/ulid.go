@@ -1,9 +1,10 @@
 package util
 
 import (
-	"github.com/oklog/ulid"
 	"strings"
 	"time"
+
+	"github.com/oklog/ulid/v2"
 )
 
 type Field int

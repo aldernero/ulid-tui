@@ -1,19 +1,22 @@
 package tui
 
 import (
-	"github.com/aldernero/ulid-tui/pkg/util"
-	"github.com/charmbracelet/lipgloss"
-	"github.com/oklog/ulid"
 	"strconv"
 	"strings"
+
+	"github.com/aldernero/ulid-tui/pkg/util"
+	"github.com/oklog/ulid/v2"
+
+	"charm.land/lipgloss/v2"
 )
 
-func genHeader(msg string, width int) string {
-	return headerStyle.Width(width).Render(util.PadWithString(msg, "═", width))
+func genHeader(msg string, width int) string { //nolint:unparam // callers currently share one table width, but each derives it independently
+	// +2 for the left/right border chars: lipgloss v2 Width() is border-box.
+	return headerStyle.Width(width + 2).Render(util.PadWithString(msg, "═", width))
 }
 
 func genFooter(msg string, width int) string {
-	return footerStyle.Width(width).Render(util.PadWithString(msg, "─", width))
+	return footerStyle.Width(width + 2).Render(util.PadWithString(msg, "─", width))
 }
 
 func emptyEncodingTable() string {
@@ -61,8 +64,8 @@ func createUlidStringBreakdown(id string) string {
 	id = strings.ToUpper(id)
 	var time, entropy string
 	if len(id) < 26 {
-		time = timeStyle.Foreground(lipgloss.Color(placeholderColor)).Render(strings.Repeat("░", 10))
-		entropy = entropyStyle.Foreground(lipgloss.Color(placeholderColor)).Render(strings.Repeat("░", 16))
+		time = timeStyle.Foreground(placeholderColor).Render(strings.Repeat("░", 10))
+		entropy = entropyStyle.Foreground(placeholderColor).Render(strings.Repeat("░", 16))
 	} else {
 		time = timeStyle.Foreground(timeColor).Render(id[:10])
 		entropy = entropyStyle.Foreground(entropyColor).Render(id[10:])

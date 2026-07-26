@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/aldernero/ulid-tui/pkg/tui"
 	"os"
+
+	"github.com/aldernero/ulid-tui/pkg/tui"
 )
 
 func main() {

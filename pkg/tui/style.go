@@ -1,32 +1,39 @@
 package tui
 
-import "github.com/charmbracelet/lipgloss"
+import (
+	"image/color"
+
+	"charm.land/lipgloss/v2"
+)
 
 const (
-	tuiWidth            = 50
-	tableWidth          = 42
-	ulidWidth           = 26
-	helpMsg             = "[Tab] switch base • [Esc] quit"
-	t1Placeholder       = "32_bit_uint_time_high"
-	t2Placeholder       = "16_bit_uint_time_low"
-	e1Placeholder       = "16_bit_uint_random"
-	e2Placeholder       = "32_bit_uint_random"
-	e3Placeholder       = "32_bit_uint_random"
-	timeDescWidth       = 9
-	timeValWidth        = 32
-	timeWidth           = 10
-	entropyWidth        = 16
-	helpColor           = lipgloss.Color("#888888")
-	borderColor         = lipgloss.Color("#00ff00")
-	placeholderColor    = lipgloss.Color("#888888")
-	baseSelectedColor   = lipgloss.Color("#0000e8")
-	baseUnselectedColor = lipgloss.Color("#ffffff")
-	invalidColor        = lipgloss.Color("#ff0000")
-	validColor          = lipgloss.Color("#00ff00")
-	timeColor           = lipgloss.Color("#00e8e8")
-	entropyColor        = lipgloss.Color("#e800e8")
-	headerColor         = lipgloss.Color("#e8e800")
-	footerColor         = lipgloss.Color("#e8e800")
+	tuiWidth      = 50
+	tableWidth    = 42
+	ulidWidth     = 26
+	helpMsg       = "[Tab] switch base • [Esc] quit"
+	t1Placeholder = "32_bit_uint_time_high"
+	t2Placeholder = "16_bit_uint_time_low"
+	e1Placeholder = "16_bit_uint_random"
+	e2Placeholder = "32_bit_uint_random"
+	e3Placeholder = "32_bit_uint_random"
+	timeDescWidth = 9
+	timeValWidth  = 32
+	timeWidth     = 10
+	entropyWidth  = 16
+)
+
+var (
+	helpColor           color.Color = lipgloss.Color("#888888")
+	borderColor         color.Color = lipgloss.Color("#00ff00")
+	placeholderColor    color.Color = lipgloss.Color("#888888")
+	baseSelectedColor   color.Color = lipgloss.Color("#0000e8")
+	baseUnselectedColor color.Color = lipgloss.Color("#ffffff")
+	invalidColor        color.Color = lipgloss.Color("#ff0000")
+	validColor          color.Color = lipgloss.Color("#00ff00")
+	timeColor           color.Color = lipgloss.Color("#00e8e8")
+	entropyColor        color.Color = lipgloss.Color("#e800e8")
+	headerColor         color.Color = lipgloss.Color("#e8e800")
+	footerColor         color.Color = lipgloss.Color("#e8e800")
 )
 
 var headerBorder = lipgloss.Border{
@@ -208,6 +215,10 @@ var stringBreakdownStyle = lipgloss.NewStyle().
 	Width(ulidWidth).
 	Render
 
+// Width() in lipgloss v2 sets the total (border-box) width rather than the
+// content width as in v1, so styles below that combine Width with left/right
+// borders add the border's horizontal overhead to keep the original layout.
+
 var timeStyle = lipgloss.NewStyle().
 	Align(lipgloss.Center).
 	BorderForeground(timeColor).
@@ -257,41 +268,41 @@ var baseStyle = lipgloss.NewStyle().
 var t1Style = lipgloss.NewStyle().
 	Inherit(baseStyle).
 	Foreground(timeColor).
-	Width(tableWidth).
+	Width(tableWidth+2).
 	Border(t1Border, true, true, false, true).
 	Render
 
 var t2Style = lipgloss.NewStyle().
 	Inherit(baseStyle).
 	Foreground(timeColor).
-	Width(tableWidth/2).
+	Width(tableWidth/2+2).
 	Border(t2Border, true, true, true, true).
 	Render
 
 var e1Style = lipgloss.NewStyle().
 	Inherit(baseStyle).
 	Foreground(entropyColor).
-	Width(tableWidth/2-1).
+	Width(tableWidth/2).
 	Border(e1Border, true, true, true, false).
 	Render
 
 var e2Style = lipgloss.NewStyle().
 	Inherit(baseStyle).
 	Foreground(entropyColor).
-	Width(tableWidth).
+	Width(tableWidth+2).
 	Border(e2Border, false, true, true, true).
 	Render
 
 var e3Style = lipgloss.NewStyle().
 	Inherit(baseStyle).
 	Foreground(entropyColor).
-	Width(tableWidth).
+	Width(tableWidth+2).
 	Border(e3Border, false, true, true, true).
 	Render
 
 var timeUTCDescStyle = lipgloss.NewStyle().
 	Align(lipgloss.Right).
-	Width(timeDescWidth).
+	Width(timeDescWidth+2).
 	Padding(0).
 	Margin(0).
 	BorderForeground(borderColor).
@@ -300,7 +311,7 @@ var timeUTCDescStyle = lipgloss.NewStyle().
 
 var timeLocalDescStyle = lipgloss.NewStyle().
 	Align(lipgloss.Right).
-	Width(timeDescWidth).
+	Width(timeDescWidth+2).
 	Padding(0).
 	Margin(0).
 	BorderForeground(borderColor).
@@ -309,7 +320,7 @@ var timeLocalDescStyle = lipgloss.NewStyle().
 
 var timeUTCValStyle = lipgloss.NewStyle().
 	Align(lipgloss.Left).
-	Width(timeValWidth).
+	Width(timeValWidth+1).
 	Padding(0).
 	Margin(0).
 	BorderForeground(borderColor).
@@ -318,7 +329,7 @@ var timeUTCValStyle = lipgloss.NewStyle().
 
 var timeLocalValStyle = lipgloss.NewStyle().
 	Align(lipgloss.Left).
-	Width(timeValWidth).
+	Width(timeValWidth+1).
 	Padding(0).
 	Margin(0).
 	BorderForeground(borderColor).
@@ -327,7 +338,7 @@ var timeLocalValStyle = lipgloss.NewStyle().
 
 var timeEpochDescStyle = lipgloss.NewStyle().
 	Align(lipgloss.Right).
-	Width(timeDescWidth).
+	Width(timeDescWidth+2).
 	Padding(0).
 	Margin(0).
 	BorderForeground(borderColor).
@@ -336,7 +347,7 @@ var timeEpochDescStyle = lipgloss.NewStyle().
 
 var timeEpochValStyle = lipgloss.NewStyle().
 	Align(lipgloss.Left).
-	Width(timeValWidth).
+	Width(timeValWidth+1).
 	Padding(0).
 	Margin(0).
 	BorderForeground(borderColor).

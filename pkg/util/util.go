@@ -21,22 +21,25 @@ func BytesToString(b []byte, enc Enc) string {
 	switch enc {
 	case Bin:
 		for i, v := range b {
-			output += fmt.Sprintf("%08b", uint8(v))
+			output += fmt.Sprintf("%08b", v)
 			if i < n-1 {
 				output += " "
 			}
 		}
 	case Hex:
 		h := hex.EncodeToString(b)
-		for i := 0; i < len(h)-1; i += 2 {
-			output += h[i:i+2] + " "
+		for i := 0; i < len(h); i += 2 {
+			if i > 0 {
+				output += " "
+			}
+			output += h[i : i+2]
 		}
 	case Dec:
 		switch n {
 		case 2:
-			output = fmt.Sprintf("%v", binary.BigEndian.Uint16(b[:]))
+			output = fmt.Sprintf("%v", binary.BigEndian.Uint16(b))
 		case 4:
-			output = fmt.Sprintf("%v", binary.BigEndian.Uint32(b[:]))
+			output = fmt.Sprintf("%v", binary.BigEndian.Uint32(b))
 		}
 	}
 	return output

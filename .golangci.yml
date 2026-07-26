@@ -1,0 +1,22 @@
+version: "2"
+run:
+  tests: true
+linters:
+  default: standard
+  enable:
+    - gocritic
+    - misspell
+    - revive
+    - unconvert
+    - unparam
+  settings:
+    revive:
+      rules:
+        - name: exported
+          disabled: true
+        - name: package-comments
+          disabled: true
+formatters:
+  enable:
+    - gofmt
+    - goimports
